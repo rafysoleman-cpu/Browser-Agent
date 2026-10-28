@@ -1,0 +1,11 @@
+{
+  "name": "Mutation Portal Bangladesh",
+  "base_url": "https://mutation.land.gov.bd",
+  "login_url": "https://lsg-land-owner.land.gov.bd/login",
+  "register_url": "https://lsg-land-owner.land.gov.bd/register",
+  "password_reset_url": "https://lsg-land-owner.land.gov.bd/password/reset",
+  "password_set_url": "https://lsg-land-owner.land.gov.bd/passwordset",
+  "otp_verify_url": "https://lsg-land-owner.land.gov.bd/otpverify",
+  "landing_url": "https://lsg-land-owner.land.gov.bd/landing",
+  "description": "Bangladesh Land Mutation Portal - ভূমি মিউটেশন পোর্টাল"
+}

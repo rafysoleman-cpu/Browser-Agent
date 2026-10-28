@@ -1,0 +1,7 @@
+{
+  "name": "NID Verify",
+  "version": "1.0",
+  "start_url": "https://lsg-land-owner.land.gov.bd/landing",
+  "requires_login": true,
+  "description": "Verify NID on Mutation Portal to link NID with citizen account"
+}

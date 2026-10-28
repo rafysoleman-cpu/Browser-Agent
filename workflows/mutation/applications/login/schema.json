@@ -1,0 +1,26 @@
+{
+  "name": "mutation_login",
+  "description": "Login to Bangladesh Land Mutation Portal",
+  "fields": {
+    "mobile_number": {
+      "type": "string",
+      "required": true,
+      "description": "Registered mobile number for login"
+    },
+    "password": {
+      "type": "string",
+      "required": false,
+      "description": "Account password (default: @Aa123456 if not provided)"
+    },
+    "user_type": {
+      "type": "enum",
+      "values": ["Citizen", "Organization"],
+      "required": false,
+      "description": "User type: Citizen or Organization (default: Citizen)"
+    }
+  },
+  "defaults": {
+    "password": "@Aa123456",
+    "user_type": "Citizen"
+  }
+}

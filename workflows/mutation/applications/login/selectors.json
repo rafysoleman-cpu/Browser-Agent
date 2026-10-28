@@ -1,0 +1,83 @@
+{
+  "mobileProfileBtn": {
+    "description": "Profile button on mobile view (logged in state)",
+    "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+    "Xpath": "//a[contains(text(),'আমার প্রোফাইল')]",
+    "ui_text_bn": "আমার প্রোফাইল"
+  },
+  "mobileLogoutBtn": {
+    "description": "Logout button on mobile view (logged in state)",
+    "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.hover\\:bg-gray-100.pr-2.mt-2.text-left.ml-\\[1em\\] > a",
+    "Xpath": "//a[contains(text(),'লগ আউট')]",
+    "ui_text_bn": "লগ আউট"
+  },
+  "desktopProfileBtn": {
+    "description": "Profile button on desktop view (logged in state)",
+    "css": "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(1)",
+    "Xpath": "//button[contains(text(),'প্রোফাইল')]",
+    "ui_text_bn": "প্রোফাইল"
+  },
+  "desktopLogoutBtn": {
+    "description": "Logout button on desktop view (logged in state)",
+    "css": "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(2)",
+    "Xpath": "//button[contains(text(),'লগ আউট')]",
+    "ui_text_bn": "লগ আউট"
+  },
+  "loginBtn": {
+    "description": "Login button on the homepage",
+    "css": "#login-register-btn-group > button.btn.btn-success.btn-sm.rounded-lg.text-white",
+    "Xpath": "//button[contains(text(),'লগইন')]",
+    "ui_text": "Login",
+    "ui_text_bn": "লগইন"
+  },
+  "citizenTab": {
+    "description": "Citizen tab on login page (usually default selected)",
+    "css": "#my-form > div > div > div > div.my-form-group.identity-trigger > div > button.tablinks.active",
+    "Xpath": "//button[contains(text(),'Citizen')]",
+    "ui_text": "Citizen"
+  },
+  "organizationTab": {
+    "description": "Organization tab on login page",
+    "css": "#my-form > div > div > div > div.my-form-group.identity-trigger > div > button:nth-child(2)",
+    "Xpath": "//button[contains(text(),'Organization')]",
+    "ui_text": "Organization"
+  },
+  "mobileNumber": {
+    "description": "Mobile number input field",
+    "css": "#mobile",
+    "Xpath": "//*[@id=\"mobile\"]"
+  },
+  "password": {
+    "description": "Password input field",
+    "css": "#see-password",
+    "Xpath": "//*[@id=\"see-password\"]"
+  },
+  "captchaText": {
+    "description": "Hardcoded captcha text displayed on page",
+    "css": "#mainCaptcha",
+    "Xpath": "//*[@id=\"mainCaptcha\"]"
+  },
+  "captchaResult": {
+    "description": "Captcha input field to type the captcha text",
+    "css": "#txtInput",
+    "Xpath": "//*[@id=\"txtInput\"]"
+  },
+  "finalSubmitBtn": {
+    "description": "Final login submit button",
+    "css": "#my-form form button[type=\"submit\"]",
+    "Xpath": "//button[contains(text(),'লগইন')]",
+    "ui_text": "Login",
+    "ui_text_bn": "লগইন"
+  },
+  "errorMsg": {
+    "description": "Login error message when credentials don't match",
+    "css": "#invalid-mobile-feedback strong",
+    "Xpath": "//strong[contains(text(),'credential')]",
+    "ui_text": "Your username and password credential didn't match"
+  },
+  "initialLoginBtn": {
+    "description": "Initial login button redirect to login portal",
+    "css": "#login-register-btn-group > button.btn.btn-success.btn-sm.rounded-lg.text-white",
+    "Xpath": "//button[contains(text(),'লগইন')]"
+  }
+}

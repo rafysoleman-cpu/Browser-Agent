@@ -1,0 +1,26 @@
+{
+  "name": "mutation_forget_password",
+  "description": "Reset password on Bangladesh Land Mutation Portal",
+  "fields": {
+    "mobile_number": {
+      "type": "string",
+      "required": true,
+      "description": "Registered mobile number for password reset"
+    },
+    "user_type": {
+      "type": "enum",
+      "values": ["Citizen", "Organization"],
+      "required": false,
+      "description": "User type: Citizen or Organization (default: Citizen)"
+    },
+    "new_password": {
+      "type": "string",
+      "required": false,
+      "description": "New password (must be 8+ chars with upper, lower, digit, special char)"
+    }
+  },
+  "defaults": {
+    "user_type": "Citizen",
+    "new_password": "@Aa123456"
+  }
+}

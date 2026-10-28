@@ -1,5 +1,4 @@
 import os
-from distutils.util import strtobool
 import gradio as gr
 import logging
 from gradio.components import Component
@@ -8,6 +7,16 @@ from src.webui.webui_manager import WebuiManager
 from src.utils import config
 
 logger = logging.getLogger(__name__)
+
+def strtobool(val):
+    """Convert a string representation of truth to boolean."""
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return True
+    elif val in ('n', 'no', 'f', 'false', 'off', '0', ''):
+        return False
+    else:
+        raise ValueError(f"Invalid truth value: {val}")
 
 async def close_browser(webui_manager: WebuiManager):
     """

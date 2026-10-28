@@ -1,0 +1,12 @@
+Step 1: Navigate to landing page.
+Step 2: Check if user is logged in (mobile/desktop profile button).
+Step 3: If logged in, click profile sidebar link. If not, navigate to /home.
+Step 4: Check if account is already NID verified (look for 'verified' message).
+       If already verified, inform user and exit.
+Step 5: Click the 'nidVerifyBtn' to open NID verification popup.
+Step 6: Fill NID number, select day/month/year of birth.
+Step 7: Click the 'updateButton' to submit NID info.
+Step 8: If error message appears ('অনুগ্রহপূর্বক সঠিক তথ্য দ্বারা আবার চেষ্টা করুন।'),
+       ask user for correct NID/DOB and refill, then re-submit.
+Step 9: Confirm verification by checking for 'verified' message.
+Step 10: Report result to user.

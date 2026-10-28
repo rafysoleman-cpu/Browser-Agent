@@ -1,0 +1,12 @@
+Step 1: Navigate to 'password_reset_url'.
+Step 2: Select user type: 'citizenTab' (default) or 'organizationTab'.
+Step 3: Fill the 'mobileNumber' input with the provided mobile_number.
+Step 4: Click the 'continueBtn' to verify the mobile number.
+Step 5: Check if 'numberNotRegisteredMsg' appears. If so, inform user the number is not registered.
+Step 6: OTP is sent. Ask user for OTP code (or let them fill manually, or resend).
+Step 7: Fill OTP and click submit. If OTP error, retry.
+Step 8: Navigate to 'password_set_url' after successful OTP verification.
+Step 9: Fill both 'newPasswordField1' and 'newPasswordField2' with the new password.
+Step 10: Check if 'passwordMismatchMsg' appears. If so, inform user.
+Step 11: Click the 'changePasswordBtn' to update password.
+Step 12: Verify success by checking redirect to landing page.

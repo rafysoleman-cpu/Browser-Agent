@@ -28,6 +28,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from browser_use.agent.views import ActionModel, ActionResult
 
 from src.utils.mcp_client import create_tool_param_model, setup_mcp_client_and_tools
+from src.workflow.workflow_engine import WorkflowEngine
 
 from browser_use.utils import time_execution_sync
 
@@ -105,6 +106,33 @@ class CustomController(Controller):
                 msg = f'Failed to upload file to index {index}: {str(e)}'
                 logger.info(msg)
                 return ActionResult(error=msg)
+
+        @self.registry.action(
+            'Run a predefined workflow for a site application. '
+            'Args: site_name (e.g. "mutation"), app_name (e.g. "login"), '
+            'and data dict with field values.'
+        )
+        async def run_workflow(site_name: str, app_name: str, data: dict, browser: BrowserContext):
+            logger.info(f"🚀 Running workflow: {site_name}/{app_name}")
+            engine = WorkflowEngine(
+                browser_context=browser,
+                llm=None,
+                ask_assistant_callback=self.ask_assistant_callback,
+                controller=self,
+            )
+            result = await engine.run_workflow(
+                site_name=site_name,
+                app_name=app_name,
+                user_data=data,
+            )
+            status = result.get("status", "unknown")
+            duration = result.get("duration_seconds", 0)
+            msg = f"Workflow {site_name}/{app_name} {status} in {duration:.2f}s."
+            if result.get("extracted_data"):
+                msg += f" Extracted: {result['extracted_data']}"
+            if result.get("failed_step"):
+                msg += f" Failed at: {result['failed_step']}"
+            return ActionResult(extracted_content=msg, include_in_memory=True)
 
     @time_execution_sync('--act')
     async def act(

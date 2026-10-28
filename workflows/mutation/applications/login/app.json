@@ -1,0 +1,7 @@
+{
+  "name": "Login",
+  "version": "1.0",
+  "start_url": "https://mutation.land.gov.bd",
+  "requires_login": false,
+  "description": "Login to Mutation Portal with citizen/organization credentials"
+}

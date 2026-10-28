@@ -1,0 +1,7 @@
+{
+  "name": "Forget Password",
+  "version": "1.0",
+  "start_url": "https://lsg-land-owner.land.gov.bd/password/reset",
+  "requires_login": false,
+  "description": "Reset password on Mutation Portal via OTP verification"
+}

@@ -50,6 +50,14 @@ class WebuiManager:
         self.dr_agent_task_id: Optional[str] = None
         self.dr_save_dir: Optional[str] = None
 
+    def init_workflow_engine(self) -> None:
+        """
+        init workflow engine state
+        """
+        self.wf_engine: Optional[object] = None
+        self.wf_current_task: Optional[asyncio.Task] = None
+        self.wf_result: Optional[Dict] = None
+
     def add_components(self, tab_name: str, components_dict: dict[str, "Component"]) -> None:
         """
         Add tab components

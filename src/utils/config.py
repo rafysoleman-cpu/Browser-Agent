@@ -9,8 +9,9 @@ PROVIDER_DISPLAY_NAMES = {
     "unbound": "Unbound AI",
     "ibm": "IBM",
     "grok": "Grok",
+    "openrouter": "OpenRouter",
+    "opencode": "OpenCode",
 }
-
 # Predefined model names for common providers
 model_names = {
     "anthropic": ["claude-3-5-sonnet-20241022", "claude-3-5-sonnet-20240620", "claude-3-opus-20240229"],
@@ -20,7 +21,7 @@ model_names = {
                "gemini-1.5-flash-8b-latest", "gemini-2.0-flash-thinking-exp-01-21", "gemini-2.0-pro-exp-02-05",
                "gemini-2.5-pro-preview-03-25", "gemini-2.5-flash-preview-04-17"],
     "ollama": ["qwen2.5:7b", "qwen2.5:14b", "qwen2.5:32b", "qwen2.5-coder:14b", "qwen2.5-coder:32b", "llama2:7b",
-               "deepseek-r1:14b", "deepseek-r1:32b"],
+               "deepseek-r1:14b", "deepseek-r1:32b", "llava:latest", "command-r7b:latest", "llama3.1:8b", "gemma3:12b"],
     "azure_openai": ["gpt-4o", "gpt-4", "gpt-3.5-turbo"],
     "mistral": ["pixtral-large-latest", "mistral-large-latest", "mistral-small-latest", "ministral-8b-latest"],
     "alibaba": ["qwen-plus", "qwen-max", "qwen-vl-max", "qwen-vl-plus", "qwen-turbo", "qwen-long"],
@@ -34,6 +35,27 @@ model_names = {
         "grok-2-vision",
         "grok-2-image",
         "grok-2",
+    ],
+    "openrouter": [
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini",
+        "openai/gpt-4-turbo",
+        "openai/gpt-3.5-turbo",
+        "anthropic/claude-3.5-sonnet",
+        "anthropic/claude-3-opus",
+        "google/gemini-pro-1.5",
+        "deepseek/deepseek-chat",
+        "deepseek/deepseek-reasoner",
+        "meta-llama/llama-3.1-70b-instruct",
+        "meta-llama/llama-3.2-90b-vision-preview",
+        "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "openai/gpt-oss-120b:free",
+        "google/gemma-4-31b-it:free",
+        "google/gemma-4-26b-a4b-it:free",
+        "meta-llama/llama-3.3-70b-instruct:free",
+        "nousresearch/hermes-3-llama-3.1-405b:free",
+        "qwen/qwen3-coder:free",
     ],
     "siliconflow": [
         "deepseek-ai/DeepSeek-R1",
@@ -96,5 +118,13 @@ model_names = {
         "Qwen/Qwen3-30B-A3B",
         "Qwen/Qwen3-32B",
         "Qwen/Qwen3-235B-A22B",
+    ],
+    "opencode": [
+        "deepseek-ai/DeepSeek-V4-Flash-Free",
+        "mimo-v2.5-free",
+        "xiaomi",
+        "hy3-free",
+        "nemotron-3-ultra-free",
+        "north-mini-code-free",
     ],
 }

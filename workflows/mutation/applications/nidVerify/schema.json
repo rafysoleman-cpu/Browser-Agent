@@ -1,0 +1,26 @@
+{
+  "name": "mutation_nid_verify",
+  "description": "Verify NID on Bangladesh Land Mutation Portal",
+  "fields": {
+    "nid_number": {
+      "type": "string",
+      "required": true,
+      "description": "NID number for verification"
+    },
+    "day": {
+      "type": "string",
+      "required": true,
+      "description": "Day of birth (1-31)"
+    },
+    "month": {
+      "type": "string",
+      "required": true,
+      "description": "Month of birth (1-12)"
+    },
+    "year": {
+      "type": "string",
+      "required": true,
+      "description": "Year of birth (e.g. 1990)"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "mobileProfileBtn": {
+    "description": "Profile button on mobile view (logged in state)",
+    "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+    "Xpath": "//a[contains(text(),'আমার প্রোফাইল')]",
+    "ui_text_bn": "আমার প্রোফাইল"
+  },
+  "mobileLogoutBtn": {
+    "description": "Logout button on mobile view (logged in state)",
+    "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.hover\\:bg-gray-100.pr-2.mt-2.text-left.ml-\\[1em\\] > a",
+    "Xpath": "//a[contains(text(),'লগ আউট')]",
+    "ui_text_bn": "লগ আউট"
+  },
+  "desktopProfileBtn": {
+    "description": "Profile button on desktop view (logged in state)",
+    "css": [
+      "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.jsustify-between.text-\\[16px\\].space-x-1.group > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+      "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.justify-between.text-\\[16px\\].space-x-1.group > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+      "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(1)",
+      ".desk-view button:first-child"
+    ],
+    "Xpath": [
+      "/html/body/nav/div/div[2]/button[2]/div/ul/li[1]/a",
+      "//button[contains(text(),'প্রোফাইল')]"
+    ],
+    "ui_text_bn": "প্রোফাইল"
+  },
+  "desktopLogoutBtn": {
+    "description": "Logout button on desktop view (logged in state)",
+    "css": [
+      "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.jsustify-between.text-\\[16px\\].space-x-1.group > div > ul > li.hover\\:bg-gray-100.pr-2.mt-2.text-left.ml-\\[1em\\] > a",
+      "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.justify-between.text-\\[16px\\].space-x-1.group > div > ul > li.hover\\:bg-gray-100.pr-2.mt-2.text-left.ml-\\[1em\\] > a",
+      "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(2)",
+      ".desk-view button:last-child"
+    ],
+    "Xpath": [
+      "/html/body/nav/div/div[2]/button[2]/div/ul/li[2]/a",
+      "//button[contains(text(),'লগ আউট')]"
+    ],
+    "ui_text_bn": "লগ আউট"
+  },
+  "profileSidebarLink": {
+    "description": "Profile link in sidebar navigation (after logged in)",
+    "css": "body > section > div > div.hidden.lg\\:flex.items-start.justify-start > div > ul > li:nth-child(2) > a",
+    "Xpath": "/html/body/section/div/div[1]/div/ul/li[2]/a",
+    "ui_text_bn": "প্রোফাইল"
+  },
+  "verifiedAccountMsg": {
+    "description": "Message shown when account is already NID verified",
+    "css": "body > section > div > div.min-h-\\[81vh\\].overflow-y-auto.w-full.bg-white.rounded-md.border.border-\\[\\#88CD8670\\].lg\\:flex.px-4.lg\\:px-0 > div.w-full.lg\\:w-\\[24\\%\\].flex.flex-col.gap-5.border-r.border-\\[\\#88CD8670\\].p-2 > p",
+    "Xpath": "//p[contains(text(),'জাতীয় পরিচয়পত্র দ্বারা ভেরিফাইকৃত একাউন্ট')]",
+    "ui_text_bn": "জাতীয় পরিচয়পত্র দ্বারা ভেরিফাইকৃত একাউন্ট",
+    "ui_text": "Verified Account by NID"
+  },
+  "nidVerifyBtn": {
+    "description": "NID verify button in profile section",
+    "css": "#myBtn",
+    "Xpath": "//*[@id=\"myBtn\"]",
+    "ui_text_bn": "যাচাই করুন"
+  },
+  "nidVerifyBtnParent": {
+    "description": "Parent div containing the NID verify button (to avoid conflict with duplicate IDs)",
+    "css": "body > section > div > div.min-h-\\[81vh\\].overflow-y-auto.w-full.bg-white.rounded-md.border.border-\\[\\#88CD8670\\].lg\\:flex.px-4.lg\\:px-0 > div.w-full.lg\\:w-\\[24\\%\\].flex.flex-col.gap-5.border-r.border-\\[\\#88CD8670\\].p-2 > div:nth-child(3) > div",
+    "Xpath": "//div[.//button[@id='myBtn']]"
+  },
+  "nidNumberInput": {
+    "description": "NID number input field in popup",
+    "css": "#reg-nid",
+    "Xpath": "//*[@id=\"reg-nid\"]"
+  },
+  "dayDropdown": {
+    "description": "Day of birth dropdown",
+    "css": "#reg-dd",
+    "Xpath": "//*[@id=\"reg-dd\"]"
+  },
+  "monthDropdown": {
+    "description": "Month of birth dropdown",
+    "css": "#reg-mm",
+    "Xpath": "//*[@id=\"reg-mm\"]"
+  },
+  "yearDropdown": {
+    "description": "Year of birth dropdown",
+    "css": "#reg-yy",
+    "Xpath": "//*[@id=\"reg-yy\"]"
+  },
+  "updateButton": {
+    "description": "Submit button to verify NID (appears after filling NID and DOB)",
+    "css": "#updateButton",
+    "Xpath": "//*[@id=\"updateButton\"]",
+    "ui_text_bn": "যাচাই করুন"
+  },
+  "nidErrorMsg": {
+    "description": "Error message when NID info is incorrect",
+    "css": "#msg-signup",
+    "Xpath": "//*[@id=\"msg-signup\"]",
+    "ui_text_bn": "অনুগ্রহপূর্বক সঠিক তথ্য দ্বারা আবার চেষ্টা করুন।"
+  }
+}

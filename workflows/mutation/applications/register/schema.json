@@ -1,0 +1,32 @@
+{
+  "name": "mutation_register",
+  "description": "Register on Bangladesh Land Mutation Portal",
+  "fields": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "description": "Full name for registration (can be random, e.g. 'abc')"
+    },
+    "mobile_number": {
+      "type": "string",
+      "required": true,
+      "description": "Mobile number for registration"
+    },
+    "user_type": {
+      "type": "enum",
+      "values": ["Citizen", "Organization"],
+      "required": false,
+      "description": "User type: Citizen or Organization (default: Citizen)"
+    },
+    "password": {
+      "type": "string",
+      "required": false,
+      "description": "Password for the new account (8+ chars, uppercase, lowercase, digit, special character)"
+    }
+  },
+  "defaults": {
+    "name": "abc",
+    "user_type": "Citizen",
+    "password": "@Aa123456"
+  }
+}

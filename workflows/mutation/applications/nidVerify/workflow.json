@@ -1,0 +1,428 @@
+{
+  "name": "Mutation Portal NID Verify",
+  "version": "1.0",
+  "description": "Complete NID verification workflow for Bangladesh Land Mutation Portal",
+  "steps": [
+    {
+      "id": "navigate_landing",
+      "action": "goto",
+      "url": "{{site.landing_url}}",
+      "description": "Navigate to landing page to check login state",
+      "wait_after": 2000
+    },
+    {
+      "id": "check_logged_in_mobile",
+      "action": "check_exists",
+      "description": "Check if user is already logged in (mobile profile button)",
+      "selectors": {
+        "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+        "Xpath": "//a[contains(text(),'আমার প্রোফাইল')]"
+      },
+      "store_in": "mobile_profile_exists",
+      "optional": true,
+      "wait_after": 500
+    },
+    {
+      "id": "check_logged_in_desktop",
+      "action": "check_exists",
+      "description": "Check if user is already logged in (desktop profile button)",
+      "selectors": {
+        "css": [
+          "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.jsustify-between.text-\\[16px\\].space-x-1.group > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+          "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.justify-between.text-\\[16px\\].space-x-1.group > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a"
+        ],
+        "Xpath": [
+          "/html/body/nav/div/div[2]/button[2]/div/ul/li[1]/a",
+          "//button[contains(text(),'প্রোফাইল')]"
+        ]
+      },
+      "store_in": "desktop_profile_exists",
+      "optional": true,
+      "wait_after": 500 
+    },
+    {
+      "id": "handle_login_state",
+      "action": "conditional",
+      "description": "If logged in (mobile check), click profile sidebar; else fallback to desktop check",
+      "condition_var": "mobile_profile_exists",
+      "condition_value": true,
+      "steps_if_true": [
+        {
+          "id": "click_profile_sidebar",
+          "action": "click",
+          "description": "Click profile link in sidebar navigation",
+          "selectors": {
+            "css": "body > section > div > div.hidden.lg\\:flex.items-start.justify-start > div > ul > li:nth-child(2) > a",
+            "Xpath": "//a[contains(text(),'প্রোফাইল')]"
+          },
+          "wait_after": 2000
+        }
+      ],
+      "steps_if_false": [
+        {
+          "id": "check_desktop_fallback_initial",
+          "action": "conditional",
+          "description": "Fallback: check desktop profile button if mobile check failed (desktop viewport)",
+          "condition_var": "desktop_profile_exists",
+          "condition_value": true,
+          "steps_if_true": [
+            {
+              "id": "click_desktop_profile_initial",
+              "action": "click",
+              "description": "Click desktop profile dropdown button",
+              "selectors": {
+                "css": [
+                  "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.jsustify-between.text-\\[16px\\].space-x-1.group > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a",
+                  "body > nav > div > div.hidden.w-\\[35\\%\\].lg\\:flex.justify-end.space-x-2.relative.inline-block > button.flex.items-center.justify-between.text-\\[16px\\].space-x-1.group > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a"
+                ],
+                "Xpath": [
+                  "/html/body/nav/div/div[2]/button[2]/div/ul/li[1]/a",
+                  "//button[contains(text(),'প্রোফাইল')]"
+                ]
+              },
+              "wait_after": 2000
+            }
+          ],
+          "steps_if_false": [
+            {
+              "id": "ask_user_to_login",
+              "action": "ask_human",
+              "question": "You are not logged in. NID verification requires a logged-in account. Please login manually in the browser now, then type 'continue'.\n\nOr type 'exit' to abort.",
+              "store_in": "user_login_response",
+              "wait_after": 500
+            },
+            {
+              "id": "click_profile_after_login",
+              "action": "click",
+              "description": "Click profile button in sidebar to navigate to home/profile page",
+              "selectors": {
+                "css": "body > section > div > div.hidden.lg\\:flex.items-start.justify-start > div > ul > li:nth-child(2) > a",
+                "Xpath": "/html/body/section/div/div[1]/div/ul/li[2]/a"
+              },
+              "optional": true,
+              "wait_after": 2000
+            },
+            {
+              "id": "confirm_on_profile_page",
+              "action": "check_exists",
+              "description": "Check if we landed on the home page by looking for NID verify button",
+              "selectors": {
+                "css": "#myBtn",
+                "Xpath": "//*[@id=\"myBtn\"]"
+              },
+              "store_in": "on_profile_page",
+              "optional": true,
+              "wait_after": 500
+            },
+            {
+              "id": "handle_profile_confirmation",
+              "action": "conditional",
+              "description": "If not on profile page, ask user to login again",
+              "condition_var": "on_profile_page",
+              "condition_value": true,
+              "steps_if_true": [],
+              "steps_if_false": [
+                {
+                  "id": "ask_login_again",
+                  "action": "ask_human",
+                  "description": "Inform user login was not detected and abort",
+                  "question": "Still not detected as logged in. NID verification cannot proceed without a logged-in session. Please run the login workflow first, then run this workflow again:\n\npython tests/test_workflow_mutation_login.py --mobile YOUR_MOBILE --password YOUR_PASSWORD",
+                  "wait_after": 500
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "check_already_verified",
+      "action": "extract",
+      "description": "Check if account is already NID verified",
+      "selectors": {
+        "css": "body > section > div > div.min-h-\\[81vh\\].overflow-y-auto.w-full.bg-white.rounded-md.border.border-\\[\\#88CD8670\\].lg\\:flex.px-4.lg\\:px-0 > div.w-full.lg\\:w-\\[24\\%\\].flex.flex-col.gap-5.border-r.border-\\[\\#88CD8670\\].p-2 > p",
+        "Xpath": "//p[contains(text(),'জাতীয় পরিচয়পত্র দ্বারা ভেরিফাইকৃত একাউন্ট')]"
+      },
+      "optional": true,
+      "store_in": "already_verified_msg",
+      "wait_after": 500
+    },
+    {
+      "id": "handle_already_verified",
+      "action": "conditional",
+      "description": "If already NID verified, inform user and exit; else continue",
+      "condition_var": "already_verified_msg",
+      "condition_value": "জাতীয় পরিচয়পত্র দ্বারা ভেরিফাইকৃত একাউন্ট",
+      "condition_type": "contains",
+      "steps_if_true": [
+        {
+          "id": "inform_already_verified",
+          "action": "ask_human",
+          "question": "Your account is already NID verified. No further action needed.",
+          "wait_after": 500
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "click_nid_verify_btn",
+      "action": "click",
+      "description": "Click NID verify button to open popup",
+      "selectors": {
+        "css": "#myBtn",
+        "Xpath": "//*[@id=\"myBtn\"]"
+      },
+      "wait_after": 1000
+    },
+    {
+      "id": "wait_popup_ready",
+      "action": "wait",
+      "description": "Wait for NID verification popup to fully appear",
+      "ms": 1500
+    },
+    {
+      "id": "fill_nid_number",
+      "action": "fill",
+      "description": "Fill NID number in popup input",
+      "selectors": {
+        "css": "#reg-nid",
+        "Xpath": "//*[@id=\"reg-nid\"]"
+      },
+      "value": "{{data.nid_number}}",
+      "wait_after": 300
+    },
+    {
+      "id": "select_day",
+      "action": "select_option",
+      "description": "Select day of birth from dropdown",
+      "selectors": {
+        "css": "#reg-dd",
+        "Xpath": "//*[@id=\"reg-dd\"]"
+      },
+      "value": "{{data.day}}",
+      "wait_after": 300
+    },
+    {
+      "id": "select_month",
+      "action": "select_option",
+      "description": "Select month of birth from dropdown",
+      "selectors": {
+        "css": "#reg-mm",
+        "Xpath": "//*[@id=\"reg-mm\"]"
+      },
+      "value": "{{data.month}}",
+      "wait_after": 300
+    },
+    {
+      "id": "select_year",
+      "action": "select_option",
+      "description": "Select year of birth from dropdown",
+      "selectors": {
+        "css": "#reg-yy",
+        "Xpath": "//*[@id=\"reg-yy\"]"
+      },
+      "value": "{{data.year}}",
+      "wait_after": 300
+    },
+    {
+      "id": "wait_update_btn_ready",
+      "action": "wait",
+      "description": "Wait for update button to appear after filling NID and DOB",
+      "ms": 1000
+    },
+    {
+      "id": "click_update_button",
+      "action": "click",
+      "description": "Click submit button to verify NID info",
+      "selectors": {
+        "css": "#updateButton",
+        "Xpath": "//*[@id=\"updateButton\"]"
+      },
+      "wait_after": 2000
+    },
+    {
+      "id": "check_nid_error",
+      "action": "extract",
+      "description": "Check if NID info error message appeared",
+      "selectors": {
+        "css": "#msg-signup",
+        "Xpath": "//*[@id=\"msg-signup\"]"
+      },
+      "optional": true,
+      "store_in": "nid_error_msg",
+      "wait_after": 500
+    },
+    {
+      "id": "handle_nid_error",
+      "action": "conditional",
+      "description": "If NID info is wrong, ask user for correct info and retry",
+      "condition_var": "nid_error_msg",
+      "condition_value": "অনুগ্রহপূর্বক সঠিক তথ্য দ্বারা আবার চেষ্টা করুন।",
+      "condition_type": "contains",
+      "steps_if_true": [
+        {
+          "id": "ask_nid_fix",
+          "action": "ask_human",
+          "question": "The NID information you provided is incorrect. Please provide the correct NID number:",
+          "store_in": "nid_fix_value",
+          "wait_after": 500
+        },
+        {
+          "id": "refill_nid_number",
+          "action": "fill",
+          "description": "Refill NID number with corrected value",
+          "selectors": {
+            "css": "#reg-nid",
+            "Xpath": "//*[@id=\"reg-nid\"]"
+          },
+          "value": "{{extracted.nid_fix_value}}",
+          "wait_after": 300
+        },
+        {
+          "id": "ask_day_fix",
+          "action": "ask_human",
+          "question": "Please provide the correct day of birth (1-31):",
+          "store_in": "day_fix_value",
+          "wait_after": 500
+        },
+        {
+          "id": "reselect_day",
+          "action": "select_option",
+          "description": "Re-select day of birth with corrected value",
+          "selectors": {
+            "css": "#reg-dd",
+            "Xpath": "//*[@id=\"reg-dd\"]"
+          },
+          "value": "{{extracted.day_fix_value}}",
+          "wait_after": 300
+        },
+        {
+          "id": "ask_month_fix",
+          "action": "ask_human",
+          "question": "Please provide the correct month of birth (1-12):",
+          "store_in": "month_fix_value",
+          "wait_after": 500
+        },
+        {
+          "id": "reselect_month",
+          "action": "select_option",
+          "description": "Re-select month of birth with corrected value",
+          "selectors": {
+            "css": "#reg-mm",
+            "Xpath": "//*[@id=\"reg-mm\"]"
+          },
+          "value": "{{extracted.month_fix_value}}",
+          "wait_after": 300
+        },
+        {
+          "id": "ask_year_fix",
+          "action": "ask_human",
+          "question": "Please provide the correct year of birth:",
+          "store_in": "year_fix_value",
+          "wait_after": 500
+        },
+        {
+          "id": "reselect_year",
+          "action": "select_option",
+          "description": "Re-select year of birth with corrected value",
+          "selectors": {
+            "css": "#reg-yy",
+            "Xpath": "//*[@id=\"reg-yy\"]"
+          },
+          "value": "{{extracted.year_fix_value}}",
+          "wait_after": 300
+        },
+        {
+          "id": "wait_retry_update_btn",
+          "action": "wait",
+          "description": "Wait for update button after refilling",
+          "ms": 1000
+        },
+        {
+          "id": "click_update_button_retry",
+          "action": "click",
+          "description": "Click update button again with corrected info",
+          "selectors": {
+            "css": "#updateButton",
+            "Xpath": "//*[@id=\"updateButton\"]"
+          },
+          "wait_after": 2000
+        },
+        {
+          "id": "check_nid_error_after_retry",
+          "action": "extract",
+          "description": "Check if NID error still persists after retry",
+          "selectors": {
+            "css": "#msg-signup",
+            "Xpath": "//*[@id=\"msg-signup\"]"
+          },
+          "optional": true,
+          "store_in": "nid_error_after_retry",
+          "wait_after": 500
+        },
+        {
+          "id": "handle_nid_error_after_retry",
+          "action": "conditional",
+          "description": "If error still exists after retry, let user fill manually",
+          "condition_var": "nid_error_after_retry",
+          "condition_value": "অনুগ্রহপূর্বক সঠিক তথ্য দ্বারা আবার চেষ্টা করুন।",
+          "condition_type": "contains",
+          "steps_if_true": [
+            {
+              "id": "ask_manual_fill",
+              "action": "ask_human",
+              "question": "The NID information is still incorrect. Please fill in the correct NID number and date of birth manually in the popup, then click the update (যাচাই করুন) button yourself. Type 'done' when you have completed it, or 'skip' to abort.",
+              "store_in": "manual_fill_response",
+              "wait_after": 500
+            },
+            {
+              "id": "check_manual_done",
+              "action": "conditional",
+              "description": "If user filled manually, continue; if skip, abort",
+              "condition_var": "manual_fill_response",
+              "condition_value": "skip",
+              "condition_type": "startswith",
+              "steps_if_true": [
+                {
+                  "id": "inform_skip",
+                  "action": "ask_human",
+                  "question": "NID verification skipped. You can try again later.",
+                  "wait_after": 500
+                }
+              ],
+              "steps_if_false": [
+                {
+                  "id": "wait_manual_complete",
+                  "action": "wait",
+                  "description": "Wait for user to finish manual fill",
+                  "ms": 5000
+                }
+              ]
+            }
+          ],
+          "steps_if_false": []
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "confirm_verified",
+      "action": "extract",
+      "description": "Confirm NID verification by checking for verified message",
+      "selectors": {
+        "css": "body > section > div > div.min-h-\\[81vh\\].overflow-y-auto.w-full.bg-white.rounded-md.border.border-\\[\\#88CD8670\\].lg\\:flex.px-4.lg\\:px-0 > div.w-full.lg\\:w-\\[24\\%\\].flex.flex-col.gap-5.border-r.border-\\[\\#88CD8670\\].p-2 > p",
+        "Xpath": "//p[contains(text(),'জাতীয় পরিচয়পত্র দ্বারা ভেরিফাইকৃত একাউন্ট')]"
+      },
+      "optional": true,
+      "store_in": "verification_confirmed",
+      "wait_after": 1000
+    },
+    {
+      "id": "report_result",
+      "action": "ask_human",
+      "description": "Report NID verification result to user",
+      "question": "NID verification completed. Verified message found: {{extracted.verification_confirmed}}. You can check your account status manually on the portal.",
+      "wait_after": 500
+    }
+  ]
+}

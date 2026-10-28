@@ -1,0 +1,9 @@
+Step 1: Navigate to 'startPageUrl'.
+Step 2: Click the 'initialLoginBtn' to go to the login portal.
+Step 3: Wait for the login portal to load ('loginPageUrl').
+Step 4: Check the 'user_type' provided in the schema. Click 'citizenTab' if Citizen, or 'organizationTab' if Organization.
+Step 5: Fill the 'mobileNumber' input with the provided mobile_number.
+Step 6: Fill the 'password' input with the provided password.
+Step 7: Read the text inside the 'captchaText' element (since it is hardcoded HTML text, extract it directly).
+Step 8: Fill the 'captchaResult' input with the extracted captcha text.
+Step 9: Click the 'finalSubmitBtn' to log in.

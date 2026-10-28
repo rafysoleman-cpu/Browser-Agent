@@ -1,0 +1,21 @@
+Step 1: Navigate to https://mutation.land.gov.bd.
+Step 2: Check if logged in (mobile/desktop profile button). If logged in, logout first.
+Step 3: Click the 'registerBtn' to go to the registration portal.
+Step 4: Select user type: 'citizenTab' (default) or 'organizationTab'.
+Step 5: Fill the 'usernameField' with the provided name.
+Step 6: Fill the 'mobileNumber' input with the provided mobile_number.
+Step 7: Read the hardcoded captcha text from 'captchaText' element.
+Step 8: Fill the 'captchaInput' with the extracted captcha text.
+Step 9: Click the 'registerSubmitBtn' to submit registration.
+Step 10: Check if 'alreadyRegisteredMsg' appears. If so, ask user if they want to login instead.
+Step 11: Navigate to OTP verification page.
+Step 12: Ask user for OTP code (or let them fill manually).
+Step 13: Fill OTP and click submit.
+Step 14: If OTP error, ask user for correct OTP or resend.
+Step 15: Navigate to password set page.
+Step 16: Fill new password field 1 ('newPasswordField1').
+Step 17: Fill new password field 2 ('newPasswordField2') as confirmation.
+Step 18: Check if password mismatch error appears. If so, ask user for matching password and refill both fields.
+Step 19: Wait for change password button to become enabled.
+Step 20: Click the 'changePasswordBtn' to set the password.
+Step 21: Navigate to landing page to verify success.

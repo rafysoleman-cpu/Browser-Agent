@@ -1,0 +1,88 @@
+{
+  "citizenTab": {
+    "description": "Citizen tab on form (usually default selected)",
+    "css": "#my-form > div > div > div > div.my-form-group.identity-trigger > div > button.tablinks.active",
+    "Xpath": "//button[contains(text(),'Citizen')]",
+    "ui_text": "Citizen"
+  },
+  "organizationTab": {
+    "description": "Organization tab on form",
+    "css": "#my-form > div > div > div > div.my-form-group.identity-trigger > div > button:nth-child(2)",
+    "Xpath": "//button[contains(text(),'Organization')]",
+    "ui_text": "Organization"
+  },
+  "mobileNumber": {
+    "description": "Mobile number input field",
+    "css": "#mobile",
+    "Xpath": "//*[@id=\"mobile\"]"
+  },
+  "continueBtn": {
+    "description": "Continue button to verify mobile number",
+    "css": "#my-form > div > div > div > form > button",
+    "Xpath": "//button[contains(text(),'Continue')]",
+    "ui_text": "Continue"
+  },
+  "numberNotRegisteredMsg": {
+    "description": "Error message when mobile number is not registered",
+    "css": "#my-form > div > div > div > form > div:nth-child(3) > span > div > ul > li",
+    "Xpath": "//li[contains(text(),'সতর্কবার্তা')]",
+    "ui_text_bn": "সতর্কবার্তা: এই ফোন নাম্বারটি নিবন্ধিত নয়"
+  },
+  "otpInputContainer": {
+    "description": "OTP input container (list of digit inputs)",
+    "css": "#my-form > div > div > div > form > div.pb-4 > ul",
+    "Xpath": "//ul[./input]"
+  },
+  "otpDigitInputs": {
+    "description": "Individual OTP digit input fields",
+    "css": "#my-form > div > div > div > form > div.pb-4 > ul input",
+    "Xpath": "//ul/input"
+  },
+  "otpSubmitBtn": {
+    "description": "OTP submit button",
+    "css": "#my-form > div > div > div > form > button",
+    "Xpath": "//button[contains(text(),'সাবমিট')]",
+    "ui_text": "Submit",
+    "ui_text_bn": "সাবমিট করুন"
+  },
+  "otpTimerText": {
+    "description": "OTP resend timer countdown text",
+    "css": "#my-form > div > div > div > form > div.row.mb-3.number > div.col-7.verify_change.again_code > p",
+    "Xpath": "//p"
+  },
+  "resendOtpBtn": {
+    "description": "Resend OTP button",
+    "css": "#my-form > div > div > div > form > div.row.mb-3.number > div.col-7.verify_change.again_code > a",
+    "Xpath": "//a[contains(text(),'পুনরায়')]",
+    "ui_text_bn": "আবার কোড পাঠান"
+  },
+  "otpErrorMsg": {
+    "description": "OTP error message when code is invalid",
+    "css": "#my-form > div > div > div > form > div.alert.alert-danger > p",
+    "Xpath": "//p[contains(text(),'OTP')]",
+    "ui_text_bn": "OTP সঠিক নয় ।"
+  },
+  "newPasswordField1": {
+    "description": "First new password input field",
+    "css": "#see-password1",
+    "Xpath": "//*[@id=\"see-password1\"]"
+  },
+  "newPasswordField2": {
+    "description": "Second new password input field (confirmation)",
+    "css": "#see-password",
+    "Xpath": "//*[@id=\"see-password\"]"
+  },
+  "passwordMismatchMsg": {
+    "description": "Error message when passwords do not match",
+    "css": "#my-form > div > div > div.reg_inner_cont > form > div.row.my-form-group > span",
+    "Xpath": "//span[contains(text(),'একই')]",
+    "ui_text_bn": "উভয় পাসওয়ার্ড একই নয় ।"
+  },
+  "changePasswordBtn": {
+    "description": "Change password submit button (enabled when requirements met)",
+    "css": "#change-password",
+    "Xpath": "//*[@id=\"change-password\"]",
+    "ui_text": "Update Password",
+    "ui_text_bn": "পাসওয়ার্ড হালনাগাদ করুন"
+  }
+}

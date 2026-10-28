@@ -1,0 +1,254 @@
+{
+  "name": "Mutation Portal Login",
+  "version": "1.0",
+  "description": "Complete login workflow for Bangladesh Land Mutation Portal",
+  "steps": [
+    {
+      "id": "navigate_home",
+      "action": "goto",
+      "url": "{{site.base_url}}",
+      "description": "Navigate to Mutation Portal homepage",
+      "wait_after": 2000
+    },
+    {
+      "id": "check_logged_in_mobile",
+      "action": "check_exists",
+      "description": "Check if user is already logged in (mobile profile button)",
+      "selectors": {
+        "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.flex.hover\\:bg-gray-100.pr-2.mt-2.ml-4 > a"
+      },
+      "store_in": "mobile_profile_exists",
+      "optional": true,
+      "wait_after": 500
+    },
+    {
+      "id": "check_logged_in_desktop",
+      "action": "check_exists",
+      "description": "Check if user is already logged in (desktop profile button)",
+      "selectors": {
+        "css": "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(1)"
+      },
+      "store_in": "desktop_profile_exists",
+      "optional": true,
+      "wait_after": 500
+    },
+    {
+      "id": "conditional_logout_mobile",
+      "action": "conditional",
+      "description": "If logged in on mobile, perform logout first",
+      "condition_var": "mobile_profile_exists",
+      "condition_value": true,
+      "steps_if_true": [
+        {
+          "id": "click_mobile_logout",
+          "action": "click",
+          "description": "Click mobile logout button",
+          "selectors": {
+            "css": "#responsiveSection > div.w-full.flex.justify-end.space-x-2.relative.inline-block > button > div > ul > li.hover\\:bg-gray-100.pr-2.mt-2.text-left.ml-\\[1em\\] > a"
+          },
+          "wait_after": 1500
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "conditional_logout_desktop",
+      "action": "conditional",
+      "description": "If logged in on desktop, perform logout first",
+      "condition_var": "desktop_profile_exists",
+      "condition_value": true,
+      "steps_if_true": [
+        {
+          "id": "click_desktop_profile",
+          "action": "click",
+          "description": "Click desktop profile button to open dropdown",
+          "selectors": {
+            "css": "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(1)"
+          },
+          "wait_after": 500
+        },
+        {
+          "id": "click_desktop_logout",
+          "action": "click",
+          "description": "Click desktop logout button",
+          "selectors": {
+            "css": "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(2)"
+          },
+          "wait_after": 1500
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "click_login",
+      "action": "click",
+      "description": "Click the Login button on homepage",
+      "selectors": {
+        "css": "#login-register-btn-group > button.btn.btn-success.btn-sm.rounded-lg.text-white"
+      },
+      "wait_after": 2000
+    },
+    {
+      "id": "wait_login_page",
+      "action": "wait",
+      "description": "Wait for login page to load",
+      "ms": 2000
+    },
+    {
+      "id": "select_user_type",
+      "action": "conditional",
+      "description": "Select user type tab (Citizen/Organization)",
+      "condition_var": "user_type",
+      "condition_value": "Organization",
+      "steps_if_true": [
+        {
+          "id": "click_organization_tab",
+          "action": "click",
+          "description": "Click Organization tab",
+          "selectors": {
+            "css": "#my-form > div > div > div > div.my-form-group.identity-trigger > div > button:nth-child(2)"
+          },
+          "wait_after": 500
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "fill_mobile",
+      "action": "fill",
+      "description": "Fill mobile number",
+      "selectors": {
+        "css": "#mobile",
+        "Xpath": "//*[@id=\"mobile\"]"
+      },
+      "value": "{{data.mobile_number}}",
+      "wait_after": 300
+    },
+    {
+      "id": "fill_password",
+      "action": "fill",
+      "description": "Fill password",
+      "selectors": {
+        "css": "#see-password",
+        "Xpath": "//*[@id=\"see-password\"]"
+      },
+      "value": "{{data.password}}",
+      "wait_after": 300
+    },
+    {
+      "id": "extract_captcha",
+      "action": "extract",
+      "description": "Extract captcha text from the hardcoded display element",
+      "selectors": {
+        "css": "#mainCaptcha",
+        "Xpath": "//*[@id=\"mainCaptcha\"]"
+      },
+      "store_in": "captcha_code",
+      "wait_after": 200
+    },
+    {
+      "id": "fill_captcha",
+      "action": "fill",
+      "description": "Fill extracted captcha text into input",
+      "selectors": {
+        "css": "#txtInput",
+        "Xpath": "//*[@id=\"txtInput\"]"
+      },
+      "value": "{{extracted.captcha_code}}",
+      "wait_after": 300
+    },
+    {
+      "id": "click_submit",
+      "action": "click",
+      "description": "Click the final Login submit button",
+      "selectors": {
+        "css": "#my-form > div > div > div > form > button"
+      },
+      "wait_after": 3000
+    },
+    {
+      "id": "check_login_error",
+      "action": "extract",
+      "description": "Check if login error message appeared",
+      "selectors": {
+        "css": "#invalid-mobile-feedback > strong"
+      },
+      "optional": true,
+      "store_in": "login_error",
+      "wait_after": 500
+    },
+    {
+      "id": "handle_server_error",
+      "action": "conditional",
+      "description": "Check if server error occurred (current URL contains 'server-error' or similar)",
+      "condition_var": "login_error",
+      "condition_value": "Your username and password credential didn't match",
+      "steps_if_true": [
+        {
+          "id": "report_credential_error",
+          "action": "ask_human",
+          "question": "Login failed: username and password didn't match. Please check credentials and provide correct mobile number and password.",
+          "store_in": "human_creds_fix",
+          "wait_after": 1000
+        }
+      ],
+      "steps_if_false": [
+        {
+          "id": "check_current_url",
+          "action": "extract",
+          "description": "Check if we're still on login page (server error recovery)",
+          "selectors": {
+            "css": "#login-register-btn-group > button.btn.btn-success.btn-sm.rounded-lg.text-white"
+          },
+          "optional": true,
+          "store_in": "still_on_login",
+          "wait_after": 1000
+        },
+        {
+          "id": "recover_server_error",
+          "action": "conditional",
+          "description": "If still seeing server error, retry from homepage",
+          "condition_var": "still_on_login",
+          "condition_value": true,
+          "steps_if_true": [
+            {
+              "id": "retry_navigate_home",
+              "action": "goto",
+              "url": "{{site.base_url}}",
+              "description": "Navigate back to homepage to retry login",
+              "wait_after": 2000
+            },
+            {
+              "id": "retry_click_login",
+              "action": "click",
+              "description": "Click Login button again after server error",
+              "selectors": {
+                "css": "#login-register-btn-group > button.btn.btn-success.btn-sm.rounded-lg.text-white"
+              },
+              "wait_after": 3000
+            }
+          ],
+          "steps_if_false": []
+        }
+      ]
+    },
+    {
+      "id": "confirm_success",
+      "action": "extract",
+      "description": "Check if login was successful by looking for profile button",
+      "selectors": {
+        "css": "#app > div.site-main > div > header > div > div > div.top-right.desk-view > div > div.dropdown-menu > button:nth-child(1)"
+      },
+      "optional": true,
+      "store_in": "login_success",
+      "wait_after": 1000
+    },
+    {
+      "id": "report_result",
+      "action": "ask_human",
+      "description": "Report login result to user",
+      "question": "Mutation Portal login completed. Profile button visible: {{extracted.login_success}}. You can now proceed with your mutation task.",
+      "wait_after": 500
+    }
+  ]
+}

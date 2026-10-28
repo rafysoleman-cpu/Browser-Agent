@@ -1,0 +1,503 @@
+{
+  "name": "Mutation Portal Forget Password",
+  "version": "1.0",
+  "description": "Complete password reset workflow for Bangladesh Land Mutation Portal",
+  "steps": [
+    {
+      "id": "navigate_reset_page",
+      "action": "goto",
+      "url": "{{site.password_reset_url}}",
+      "description": "Navigate to password reset page",
+      "wait_after": 2000
+    },
+    {
+      "id": "select_user_type",
+      "action": "conditional",
+      "description": "Select user type tab (Citizen/Organization)",
+      "condition_var": "user_type",
+      "condition_value": "Organization",
+      "steps_if_true": [
+        {
+          "id": "click_organization_tab",
+          "action": "click",
+          "description": "Click Organization tab",
+          "selectors": {
+            "css": "#my-form > div > div > div > div.my-form-group.identity-trigger > div > button:nth-child(2)"
+          },
+          "wait_after": 500
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "fill_mobile",
+      "action": "fill",
+      "description": "Fill registered mobile number",
+      "selectors": {
+        "css": "#mobile",
+        "Xpath": "//*[@id=\"mobile\"]"
+      },
+      "value": "{{data.mobile_number}}",
+      "wait_after": 300
+    },
+    {
+      "id": "click_continue",
+      "action": "click",
+      "description": "Click Continue button to verify mobile number",
+      "selectors": {
+        "css": "#my-form > div > div > div > form > button"
+      },
+      "wait_after": 3000
+    },
+    {
+      "id": "check_number_not_registered",
+      "action": "extract",
+      "description": "Check if 'number not registered' error message appeared",
+      "selectors": {
+        "css": "#my-form > div > div > div > form > div:nth-child(3) > span > div > ul > li"
+      },
+      "optional": true,
+      "store_in": "not_registered_msg",
+      "wait_after": 500
+    },
+    {
+      "id": "handle_not_registered",
+      "action": "conditional",
+      "description": "If mobile number is not registered, inform the user",
+      "condition_var": "not_registered_msg",
+      "condition_value": "সতর্কবার্তা: এই ফোন নাম্বারটি নিবন্ধিত নয়",
+      "steps_if_true": [
+        {
+          "id": "inform_not_registered",
+          "action": "ask_human",
+          "question": "The mobile number {{data.mobile_number}} is not registered in the Mutation Portal. Please check the number or register first using:\n\npython tests/test_workflow_mutation_register.py --mobile {{data.mobile_number}}\n\nType 'continue' to proceed anyway, or provide a different mobile number.",
+          "store_in": "user_not_registered_response",
+          "wait_after": 500
+        }
+      ],
+      "steps_if_false": [
+        {
+          "id": "navigate_to_otp",
+          "action": "goto",
+          "url": "{{site.otp_verify_url}}",
+          "description": "Navigate to OTP verification page",
+          "wait_after": 2000
+        }
+      ]
+    },
+    {
+      "id": "ask_otp",
+      "action": "ask_human",
+      "description": "Ask user for OTP code sent to their mobile",
+      "question": "An OTP has been sent to {{data.mobile_number}} for password reset. Please provide the 6-digit OTP code, or type 'done' if you have already filled it manually on the page, or type 'resend' to send a new code.",
+      "store_in": "otp_response",
+      "wait_after": 1000
+    },
+    {
+      "id": "handle_otp_response",
+      "action": "conditional",
+      "description": "Handle OTP input: manual fill, resend, or auto-fill",
+      "condition_var": "otp_response",
+      "condition_value": "done",
+      "steps_if_true": [
+        {
+          "id": "wait_manual_otp_fill",
+          "action": "wait",
+          "description": "Wait for user to finish filling OTP manually",
+          "ms": 3000
+        },
+        {
+          "id": "click_otp_submit_manual",
+          "action": "click",
+          "description": "Click OTP submit button (user filled manually)",
+          "selectors": {
+            "css": "#my-form > div > div > div > form > button"
+          },
+          "wait_after": 2000
+        }
+      ],
+      "steps_if_false": [
+        {
+          "id": "handle_otp_resend",
+          "action": "conditional",
+          "description": "Check if user wants to resend OTP",
+          "condition_var": "otp_response",
+          "condition_value": "resend",
+          "condition_type": "startswith",
+          "steps_if_true": [
+            {
+              "id": "extract_timer",
+              "action": "extract",
+              "description": "Check OTP resend timer text",
+              "selectors": {
+                "css": "#my-form > div > div > div > form > div.row.mb-3.number > div.col-7.verify_change.again_code > p"
+              },
+              "optional": true,
+              "store_in": "otp_timer",
+              "wait_after": 500
+            },
+            {
+              "id": "wait_resend_timer",
+              "action": "wait_timer",
+              "description": "Wait for resend cooldown timer to expire",
+              "timer_var": "otp_timer",
+              "safety_margin": 5,
+              "default_wait_ms": 120000,
+              "wait_after": 500
+            },
+            {
+              "id": "click_resend",
+              "action": "click",
+              "description": "Click resend OTP button",
+              "selectors": {
+                "css": "#my-form > div > div > div > form > div.row.mb-3.number > div.col-7.verify_change.again_code > a"
+              },
+              "wait_after": 2000
+            },
+            {
+              "id": "ask_otp_after_resend",
+              "action": "ask_human",
+              "description": "Ask for OTP after resending",
+              "question": "A new OTP has been sent to {{data.mobile_number}}. Please provide the 6-digit OTP code, or type 'done' if you have already filled it manually on the page.",
+              "store_in": "otp_after_resend",
+              "wait_after": 1000
+            },
+            {
+              "id": "handle_otp_after_resend",
+              "action": "conditional",
+              "description": "Check if user filled OTP manually after resend",
+              "condition_var": "otp_after_resend",
+              "condition_value": "done",
+              "steps_if_true": [
+                {
+                  "id": "wait_manual_after_resend",
+                  "action": "wait",
+                  "ms": 3000
+                },
+                {
+                  "id": "submit_otp_after_resend_manual",
+                  "action": "click",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > button"
+                  },
+                  "wait_after": 2000
+                }
+              ],
+              "steps_if_false": [
+                {
+                  "id": "fill_otp_after_resend",
+                  "action": "fill_otp",
+                  "description": "Fill OTP after resend",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > div.pb-4 > ul"
+                  },
+                  "value": "{{extracted.otp_after_resend}}",
+                  "wait_after": 300
+                },
+                {
+                  "id": "submit_otp_after_resend",
+                  "action": "click",
+                  "description": "Submit OTP after resend",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > button"
+                  },
+                  "wait_after": 2000
+                }
+              ]
+            }
+          ],
+          "steps_if_false": [
+            {
+              "id": "fill_otp_auto",
+              "action": "fill_otp",
+              "description": "Fill OTP code provided by user",
+              "selectors": {
+                "css": "#my-form > div > div > div > form > div.pb-4 > ul"
+              },
+              "value": "{{extracted.otp_response}}",
+              "wait_after": 300
+            },
+            {
+              "id": "click_otp_submit_auto",
+              "action": "click",
+              "description": "Click OTP submit button",
+              "selectors": {
+                "css": "#my-form > div > div > div > form > button"
+              },
+              "wait_after": 2000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "check_otp_error",
+      "action": "extract",
+      "description": "Check if OTP error message appeared",
+      "selectors": {
+        "css": "#my-form > div > div > div > form > div.alert.alert-danger > p"
+      },
+      "optional": true,
+      "store_in": "otp_error_msg",
+      "wait_after": 500
+    },
+    {
+      "id": "handle_otp_error",
+      "action": "conditional",
+      "description": "If OTP is invalid, ask user to retry with correct code",
+      "condition_var": "otp_error_msg",
+      "condition_value": "OTP সঠিক নয় ।",
+      "steps_if_true": [
+        {
+          "id": "ask_otp_retry",
+          "action": "ask_human",
+          "question": "The OTP you entered is incorrect. Please provide the correct 6-digit OTP, or type 'done' if you have filled it manually, or type 'resend' to send a new code.",
+          "store_in": "otp_retry_response",
+          "wait_after": 500
+        },
+        {
+          "id": "handle_otp_retry",
+          "action": "conditional",
+          "description": "Handle OTP retry: manual, resend, or auto-fill",
+          "condition_var": "otp_retry_response",
+          "condition_value": "done",
+          "steps_if_true": [
+            {
+              "id": "wait_otp_retry_manual",
+              "action": "wait",
+              "ms": 3000
+            },
+            {
+              "id": "submit_otp_retry_manual",
+              "action": "click",
+              "selectors": {
+                "css": "#my-form > div > div > div > form > button"
+              },
+              "wait_after": 2000
+            }
+          ],
+          "steps_if_false": [
+            {
+              "id": "handle_otp_retry_resend",
+              "action": "conditional",
+              "description": "If user wants resend during retry",
+              "condition_var": "otp_retry_response",
+              "condition_value": "resend",
+              "condition_type": "startswith",
+              "steps_if_true": [
+                {
+                  "id": "extract_timer_retry",
+                  "action": "extract",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > div.row.mb-3.number > div.col-7.verify_change.again_code > p"
+                  },
+                  "optional": true,
+                  "store_in": "otp_timer_retry",
+                  "wait_after": 500
+                },
+                {
+                  "id": "wait_resend_timer_retry",
+                  "action": "wait_timer",
+                  "description": "Wait for resend cooldown timer to expire",
+                  "timer_var": "otp_timer_retry",
+                  "safety_margin": 5,
+                  "default_wait_ms": 120000,
+                  "wait_after": 500
+                },
+                {
+                  "id": "click_resend_retry",
+                  "action": "click",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > div.row.mb-3.number > div.col-7.verify_change.again_code > a"
+                  },
+                  "wait_after": 2000
+                },
+                {
+                  "id": "ask_otp_retry_final",
+                  "action": "ask_human",
+                  "question": "A new OTP has been sent. Please provide the correct 6-digit OTP code, or type 'done' if you have filled it manually.",
+                  "store_in": "otp_retry_final_response",
+                  "wait_after": 500
+                },
+                {
+                  "id": "handle_otp_retry_final",
+                  "action": "conditional",
+                  "condition_var": "otp_retry_final_response",
+                  "condition_value": "done",
+                  "steps_if_true": [
+                    {
+                      "id": "wait_otp_retry_final_manual",
+                      "action": "wait",
+                      "ms": 3000
+                    },
+                    {
+                      "id": "submit_otp_retry_final_manual",
+                      "action": "click",
+                      "selectors": {
+                        "css": "#my-form > div > div > div > form > button"
+                      },
+                      "wait_after": 2000
+                    }
+                  ],
+                  "steps_if_false": [
+                    {
+                      "id": "fill_otp_retry_final",
+                      "action": "fill_otp",
+                      "selectors": {
+                        "css": "#my-form > div > div > div > form > div.pb-4 > ul"
+                      },
+                      "value": "{{extracted.otp_retry_final_response}}",
+                      "wait_after": 300
+                    },
+                    {
+                      "id": "submit_otp_retry_final",
+                      "action": "click",
+                      "selectors": {
+                        "css": "#my-form > div > div > div > form > button"
+                      },
+                      "wait_after": 2000
+                    }
+                  ]
+                }
+              ],
+              "steps_if_false": [
+                {
+                  "id": "fill_otp_retry_value",
+                  "action": "fill_otp",
+                  "description": "Fill retry OTP value",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > div.pb-4 > ul"
+                  },
+                  "value": "{{extracted.otp_retry_response}}",
+                  "wait_after": 300
+                },
+                {
+                  "id": "submit_otp_retry_value",
+                  "action": "click",
+                  "description": "Submit retry OTP",
+                  "selectors": {
+                    "css": "#my-form > div > div > div > form > button"
+                  },
+                  "wait_after": 2000
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "steps_if_false": [
+        {
+          "id": "navigate_to_password_set",
+          "action": "goto",
+          "url": "{{site.password_set_url}}",
+          "description": "Navigate to password set page after OTP verification",
+          "wait_after": 2000
+        }
+      ]
+    },
+    {
+      "id": "fill_new_password1",
+      "action": "fill",
+      "description": "Fill new password field 1",
+      "selectors": {
+        "css": "#see-password1",
+        "Xpath": "//*[@id=\"see-password1\"]"
+      },
+      "value": "{{data.new_password}}",
+      "trigger_events": true,
+      "wait_after": 300
+    },
+    {
+      "id": "fill_new_password2",
+      "action": "fill",
+      "description": "Fill new password field 2 (confirmation)",
+      "selectors": {
+        "css": "#see-password",
+        "Xpath": "//*[@id=\"see-password\"]"
+      },
+      "value": "{{data.new_password}}",
+      "trigger_events": true,
+      "wait_after": 300
+    },
+    {
+      "id": "check_password_mismatch",
+      "action": "extract",
+      "description": "Check if password mismatch error appeared",
+      "selectors": {
+        "css": "#my-form > div > div > div.reg_inner_cont > form > div.row.my-form-group > span"
+      },
+      "optional": true,
+      "store_in": "password_mismatch_msg",
+      "wait_after": 500
+    },
+    {
+      "id": "handle_password_mismatch",
+      "action": "conditional",
+      "description": "If passwords don't match, inform user",
+      "condition_var": "password_mismatch_msg",
+      "condition_value": "উভয় পাসওয়ার্ড একই নয় ।",
+      "steps_if_true": [
+        {
+          "id": "inform_mismatch",
+          "action": "ask_human",
+          "question": "The passwords you entered do not match. Please provide a new password that meets the requirements (8+ characters, uppercase, lowercase, digit, special character) and both fields must match.",
+          "store_in": "user_password_fix",
+          "wait_after": 500
+        },
+        {
+          "id": "refill_password1_mismatch",
+          "action": "fill",
+          "selectors": {
+            "css": "#see-password1",
+            "Xpath": "//*[@id=\"see-password1\"]"
+          },
+          "value": "{{extracted.user_password_fix}}",
+          "trigger_events": true,
+          "wait_after": 300
+        },
+        {
+          "id": "refill_password2_mismatch",
+          "action": "fill",
+          "selectors": {
+            "css": "#see-password",
+            "Xpath": "//*[@id=\"see-password\"]"
+          },
+          "value": "{{extracted.user_password_fix}}",
+          "trigger_events": true,
+          "wait_after": 300
+        }
+      ],
+      "steps_if_false": []
+    },
+    {
+      "id": "wait_for_button_enable",
+      "action": "wait",
+      "description": "Wait for change password button to become enabled (JS validation)",
+      "ms": 1000
+    },
+    {
+      "id": "click_change_password",
+      "action": "click",
+      "description": "Click the change password submit button",
+      "selectors": {
+        "css": "#change-password",
+        "Xpath": "//*[@id=\"change-password\"]"
+      },
+      "wait_after": 3000
+    },
+    {
+      "id": "verify_success",
+      "action": "goto",
+      "description": "Navigate to landing page to verify password change success",
+      "url": "{{site.landing_url}}",
+      "wait_after": 2000
+    },
+    {
+      "id": "report_result",
+      "action": "ask_human",
+      "description": "Report password reset result to user",
+      "question": "Mutation Portal password reset completed successfully. Your password has been updated. You can now login with your new password.",
+      "wait_after": 500
+    }
+  ]
+}
